@@ -1,0 +1,52 @@
+{
+  "name": "postcss-pseudo-where-fallback",
+  "version": "0.1.0",
+  "description": "PostCSS plugin to provide fallbacks for :where() pseudo-class",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "esbuild src/index.mjs --format=esm --outfile=dist/index.mjs && esbuild src/index.mjs --format=cjs --outfile=dist/index.cjs",
+    "test": "node --test",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "postcss",
+    "postcss-plugin",
+    "css",
+    "where",
+    "pseudo-class",
+    "fallback",
+    "polyfill"
+  ],
+  "author": "Zoli Szabó",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoliszabo/postcss-pseudo-where-fallback.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zoliszabo/postcss-pseudo-where-fallback/issues"
+  },
+  "peerDependencies": {
+    "postcss": "^8.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "postcss": "^8.4.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

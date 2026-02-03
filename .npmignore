@@ -1,0 +1,29 @@
+# Source files (only ship built files)
+src/
+
+# Tests
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Development files
+.gitignore
+.eslintrc*
+.prettierrc*
+tsconfig.json
+
+# Documentation source
+docs/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
