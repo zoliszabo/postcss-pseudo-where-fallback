@@ -17,7 +17,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "esbuild src/index.mjs --format=esm --outfile=dist/index.mjs && esbuild src/index.mjs --format=cjs --outfile=dist/index.cjs",
+    "build": "rollup -c",
     "test": "node --test",
     "prepublishOnly": "npm run build"
   },
@@ -44,9 +44,10 @@
   },
   "devDependencies": {
     "@csstools/postcss-tape": "^7.0.0",
-    "esbuild": "^0.27.2",
+    "@rollup/plugin-terser": "^0.4.4",
     "postcss": "^8.4.0",
-    "postcss-selector-parser": "^7.1.1"
+    "postcss-selector-parser": "^7.1.1",
+    "rollup": "^4.57.1"
   },
   "engines": {
     "node": ">=14.0.0"
