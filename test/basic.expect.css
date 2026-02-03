@@ -1,1 +1,1 @@
-.foo, .bar { color: red; }@supports selector(:where(*)) {:where(.foo, .bar) { color: red; } }
+@supports not selector(:where(*)) {.foo, .bar { color: red; } }@supports selector(:where(*)) {:where(.foo, .bar) { color: red; } }

@@ -67,8 +67,16 @@ const plugin = () => {
                     selector: fallbackSelectors.join(', '),
                 });
 
-                // Create @supports wrapper
-                const supportsAtRule = postcss.atRule({
+                // Wrap fallback in @supports not selector(:where(*))
+                const fallbackSupports = postcss.atRule({
+                    name: 'supports',
+                    params: 'not selector(:where(*))',
+                    source: rule.source,
+                });
+                fallbackSupports.append(fallbackRule);
+
+                // Create @supports wrapper for modern browsers
+                const modernSupports = postcss.atRule({
                     name: 'supports',
                     params: 'selector(:where(*))',
                     source: rule.source,
@@ -76,12 +84,11 @@ const plugin = () => {
 
                 // Clone original rule into @supports
                 const modernRule = rule.clone();
+                modernSupports.append(modernRule);
 
-                supportsAtRule.append(modernRule);
-
-                // Insert fallback + supports block before original
-                rule.before(fallbackRule);
-                rule.before(supportsAtRule);
+                // Insert both @supports blocks before original
+                rule.before(fallbackSupports);
+                rule.before(modernSupports);
 
                 // Remove original rule
                 rule.remove();
