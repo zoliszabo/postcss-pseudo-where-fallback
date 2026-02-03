@@ -1,6 +1,6 @@
 {
   "name": "postcss-pseudo-where-fallback",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "PostCSS plugin to provide fallbacks for :where() pseudo-class",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -43,8 +43,10 @@
     "postcss": "^8.0.0"
   },
   "devDependencies": {
+    "@csstools/postcss-tape": "^7.0.0",
     "esbuild": "^0.27.2",
-    "postcss": "^8.4.0"
+    "postcss": "^8.4.0",
+    "postcss-selector-parser": "^7.1.1"
   },
   "engines": {
     "node": ">=14.0.0"
