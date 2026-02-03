@@ -29,6 +29,21 @@ export default {
 
 **Note:** This plugin currently does not accept any options. Simply use it without arguments: `postcssPluginPseudoWhereFallback()`.
 
+### With Object Syntax (Auto-loading)
+
+PostCSS can automatically load the plugin by its package name when using object syntax:
+
+```js
+// postcss.config.js
+export default {
+  plugins: {
+    'postcss-pseudo-where-fallback': {},
+  }
+};
+```
+
+This syntax is commonly used with tools like Vite and automatically resolves the plugin from `node_modules`.
+
 ### With PostCSS CLI
 
 ```js
