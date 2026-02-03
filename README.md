@@ -27,6 +27,8 @@ export default {
 };
 ```
 
+**Note:** This plugin currently does not accept any options. Simply use it without arguments: `postcssPluginPseudoWhereFallback()`.
+
 ### With PostCSS CLI
 
 ```js
@@ -90,6 +92,43 @@ The plugin keeps the original `:where()` selector for modern browsers (which wil
 - **Modern browsers**: Use the `:where()` selector with zero specificity
 - **Older browsers with `@supports`**: Ignore the invalid `:where()` selector and use the fallback with normal specificity
 - **Very old browsers** (no `@supports` support): Ignore both the `:where()` and `@supports` blocks, resulting in no styles (these are pre-2013 browsers)
+
+## Important Note on Specificity
+
+The key feature of `:where()` is that it has **zero specificity**, while the fallback selectors have **normal specificity**. This can result in different behavior in legacy browsers when combined with other selectors:
+
+```css
+/* Your CSS */
+.sidebar :where(.button) {
+  background: blue;
+}
+
+.button {
+  background: red;
+}
+```
+
+**In modern browsers:**
+```css
+/* .sidebar :where(.button) = 0,1,0 specificity (only .sidebar counts) */
+/* .button = 0,1,0 specificity */
+/* Result: red background (last rule wins due to equal specificity) ✓ */
+```
+
+**In legacy browsers with the fallback:**
+```css
+.sidebar :where(.button) { background: blue; }
+@supports not selector(:where(*)) {
+  .sidebar .button { background: blue; }  /* 0,2,0 specificity! */
+}
+
+.button { background: red; }  /* 0,1,0 specificity */
+/* Result: blue background (fallback wins due to higher specificity) ✗ */
+```
+
+The fallback `.sidebar .button` has **higher specificity** (0,2,0) than the intended override `.button` (0,1,0), causing different behavior in legacy browsers.
+
+**Recommendation:** If you're using `:where()` specifically for its zero-specificity behavior in complex cascade scenarios, test thoroughly in legacy browsers or consider using more specific overrides.
 
 ## More Examples
 
@@ -156,14 +195,6 @@ Output:
     padding: 10px;
   }
 }
-```
-
-## Options
-
-This plugin currently does not accept any options. Simply use it without arguments:
-
-```js
-postcssPluginPseudoWhereFallback()
 ```
 
 ## Browser Support
