@@ -66,8 +66,9 @@ const plugin = () => {
                 // Browsers that support :where() will use it naturally
 
                 // Create fallback rule (normal specificity)
+                // Trim each selector to remove extra spacing before joining
                 const fallbackRule = rule.clone({
-                    selector: fallbackSelectors.join(', '),
+                    selector: fallbackSelectors.map(s => s.trim()).join(', '),
                 });
 
                 // Wrap fallback in @supports not selector(:where(*))
