@@ -18,13 +18,11 @@ npm install postcss-pseudo-where-fallback --save-dev
 
 ```js
 // postcss.config.js
-import postcssPluginPseudoWhereFallback from 'postcss-pseudo-where-fallback';
+import postcssPseudoWhereFallback from 'postcss-pseudo-where-fallback';
 
 export default {
   plugins: [
-    postcssPluginPseudoWhereFallback({
-      // options
-    })
+    postcssPseudoWhereFallback()
   ]
 };
 ```
@@ -35,9 +33,7 @@ export default {
 // postcss.config.cjs
 module.exports = {
   plugins: [
-    require('postcss-pseudo-where-fallback')({
-      // options
-    })
+    require('postcss-pseudo-where-fallback')()
   ]
 };
 ```
@@ -46,10 +42,10 @@ module.exports = {
 
 ```js
 import postcss from 'postcss';
-import postcssPluginPseudoWhereFallback from 'postcss-pseudo-where-fallback';
+import postcssPseudoWhereFallback from 'postcss-pseudo-where-fallback';
 
 const result = await postcss([
-  postcssPluginPseudoWhereFallback()
+  postcssPseudoWhereFallback()
 ]).process(css, { from: 'input.css', to: 'output.css' });
 ```
 
@@ -70,39 +66,104 @@ h1:where(.title, .heading) {
 ### Output
 
 ```css
-/* Fallback for browsers without :where() support */
-.foo, .bar {
+:where(.foo, .bar) {
   color: red;
 }
-
-/* Modern browsers with :where() support */
-@supports selector(:where(*)) {
-  :where(.foo, .bar) {
+@supports not selector(:where(*)) {
+  .foo, .bar {
     color: red;
   }
 }
 
-/* Fallback */
-h1.title, h1.heading {
+h1:where(.title, .heading) {
   font-size: 2rem;
 }
-
-/* Modern */
-@supports selector(:where(*)) {
-  h1:where(.title, .heading) {
+@supports not selector(:where(*)) {
+  h1.title, h1.heading {
     font-size: 2rem;
   }
 }
 ```
 
-The plugin creates a fallback selector with normal specificity for older browsers, then wraps the original `:where()` selector in an `@supports` rule so modern browsers can use the zero-specificity version.
+The plugin keeps the original `:where()` selector for modern browsers (which will use it with zero specificity), and adds a fallback wrapped in `@supports not selector(:where(*))` for older browsers that don't support `:where()`. This ensures:
+
+- **Modern browsers**: Use the `:where()` selector with zero specificity
+- **Older browsers with `@supports`**: Ignore the invalid `:where()` selector and use the fallback with normal specificity
+- **Very old browsers** (no `@supports` support): Ignore both the `:where()` and `@supports` blocks, resulting in no styles (these are pre-2013 browsers)
+
+## More Examples
+
+### Selector Lists with Mixed Types
+
+Input:
+```css
+a, :where(b) {
+  color: red;
+}
+```
+
+Output:
+```css
+a, :where(b) {
+  color: red;
+}
+@supports not selector(:where(*)) {
+  b {
+    color: red;
+  }
+}
+```
+
+Note: The fallback only includes expanded `:where()` selectors. Regular selectors like `a` are already valid and don't need to be repeated.
+
+### Attribute Selectors
+
+Input:
+```css
+input:where([type='button'], [type='submit'], [type='reset']) {
+  cursor: pointer;
+}
+```
+
+Output:
+```css
+input:where([type='button'], [type='submit'], [type='reset']) {
+  cursor: pointer;
+}
+@supports not selector(:where(*)) {
+  input[type='button'], input[type='submit'], input[type='reset'] {
+    cursor: pointer;
+  }
+}
+```
+
+### Complex Selectors
+
+Input:
+```css
+.container :where(.foo, .bar) .item {
+  padding: 10px;
+}
+```
+
+Output:
+```css
+.container :where(.foo, .bar) .item {
+  padding: 10px;
+}
+@supports not selector(:where(*)) {
+  .container .foo .item, .container .bar .item {
+    padding: 10px;
+  }
+}
+```
 
 ## Options
 
+This plugin currently does not accept any options. Simply use it without arguments:
+
 ```js
-postcssPluginPseudoWhereFallback({
-  // Plugin options here
-})
+postcssPluginPseudoWhereFallback()
 ```
 
 ## Browser Support
