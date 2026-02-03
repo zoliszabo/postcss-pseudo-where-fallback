@@ -62,12 +62,16 @@ const plugin = () => {
                     });
                 }).processSync(rule.selector);
 
-                // Clone fallback rule (normal specificity)
+                // Keep the modern :where() rule as-is (no wrapper needed)
+                // Browsers that support :where() will use it naturally
+
+                // Create fallback rule (normal specificity)
                 const fallbackRule = rule.clone({
                     selector: fallbackSelectors.join(', '),
                 });
 
                 // Wrap fallback in @supports not selector(:where(*))
+                // This ensures it only applies in browsers that don't support :where()
                 const fallbackSupports = postcss.atRule({
                     name: 'supports',
                     params: 'not selector(:where(*))',
@@ -75,23 +79,8 @@ const plugin = () => {
                 });
                 fallbackSupports.append(fallbackRule);
 
-                // Create @supports wrapper for modern browsers
-                const modernSupports = postcss.atRule({
-                    name: 'supports',
-                    params: 'selector(:where(*))',
-                    source: rule.source,
-                });
-
-                // Clone original rule into @supports
-                const modernRule = rule.clone();
-                modernSupports.append(modernRule);
-
-                // Insert both @supports blocks before original
-                rule.before(fallbackSupports);
-                rule.before(modernSupports);
-
-                // Remove original rule
-                rule.remove();
+                // Insert fallback after the original rule
+                rule.after(fallbackSupports);
             });
         }
     }
