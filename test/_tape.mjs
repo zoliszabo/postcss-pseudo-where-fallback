@@ -8,6 +8,12 @@ postcssTape(plugin)({
 	complex: {
 		message: "handles complex selectors with :where()"
 	},
+	mixed: {
+		message: "handles selectors with both :where() and regular selectors"
+	},
+	'selector-list': {
+		message: "handles selector lists mixing regular and :where() selectors"
+	},
 	'no-where': {
 		message: "leaves selectors without :where() unchanged"
 	}
