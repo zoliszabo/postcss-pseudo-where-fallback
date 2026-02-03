@@ -14,6 +14,12 @@ postcssTape(plugin)({
 	'selector-list': {
 		message: "handles selector lists mixing regular and :where() selectors"
 	},
+	attribute: {
+		message: "handles attribute selectors inside :where()"
+	},
+	'multiple-attributes': {
+		message: "handles multiple selectors with attribute selectors in :where()"
+	},
 	'no-where': {
 		message: "leaves selectors without :where() unchanged"
 	}

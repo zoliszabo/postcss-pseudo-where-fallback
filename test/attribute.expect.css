@@ -1,0 +1,1 @@
+input:where([type='button']) { cursor: pointer; }@supports not selector(:where(*)) {input[type='button'] { cursor: pointer; } }

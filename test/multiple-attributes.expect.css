@@ -1,0 +1,1 @@
+input:where([type='button']), input:where([type='submit']), input:where([type='reset']) { cursor: pointer; }@supports not selector(:where(*)) {input[type='button'],  input[type='submit'],  input[type='reset'] { cursor: pointer; } }
